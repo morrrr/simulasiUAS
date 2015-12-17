@@ -15,9 +15,7 @@ class HomePageTest(TestCase):
     def test_home_page_returns_correct_html(self):
         request = HttpRequest()
         response = home_page(request)
-        expected_html = render_to_string('home.html', 
-            {'comment' : 'yey, waktunya berlibur'}
-        )
+        expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
         
     def test_home_page_only_saves_items_when_necessary(self):
