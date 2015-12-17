@@ -41,14 +41,15 @@ class ListAndItemModelsTest(TestCase):
         self.assertEqual(saved_list, list_)
         
         saved_items = Item.objects.all()
-        self.assertEqual(saved_items.count(), 4)
+        self.assertEqual(saved_items.count(), 2)
 
         first_saved_item = saved_items[0]
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.angka, 0)
-        self.assertEqual(first_item.tebakan, 0)
-        self.assertEqual(first_item.status, 'The first (ever) status')
+        self.assertEqual(first_saved_item.tebakan, 0)
+        self.assertEqual(first_saved_item.status, 'The first (ever) status')
         self.assertEqual(first_item.list, list_)
+        
         self.assertEqual(second_saved_item.angka, 0)
         self.assertEqual(second_saved_item.tebakan, 0)
         self.assertEqual(second_saved_item.status, 'Item the status')
