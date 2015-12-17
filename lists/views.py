@@ -1,30 +1,45 @@
 from django.shortcuts import redirect, render
 from lists.models import Item, List
+import random
 
 def view_list(request, list_id):
     list_ = List.objects.get(id=list_id)
-    countList = Item.objects.filter(list_id=list_.id).count()
-    if countList == 0 :
-        comment = 'yey, waktunya berlibur'
-    if (countList < 5) and (countList != 0) :
-        comment = 'sibuk tapi santai'
-    if countList >= 5 :
-        comment = 'oh tidak'
-    return render(request, 'list.html', {'list': list_, 'comment':comment})
-    
+    return render(request, 'list.html', {'list':list_})
+
 def home_page(request):
-    #if request.method == 'POST':
-     #   Item.objects.create(text=request.POST['item_text'])
-      #  return redirect('/lists/the-only-list-in-the-world/')   
-    comment = 'yey, waktunya berlibur'    
-    return render(request, 'home.html', {'comment':comment})
+    return render(request, 'home.html')
 
 def new_list(request):
     list_ = List.objects.create()
-    Item.objects.create(text=request.POST['item_text'], list=list_)
+    
+    angkaRandom = random.randint(1,30)
+    angkaTebakan = int(request.POST['item_text'])    
+    
+    item=Item()
+    item.angka = angkaRandom
+    item.tebakan = angkaTebakan
+    item.status = lihatStatus(angkaRandom, angkaTebakan)
+    item.list = list_
+    item.save()
+    
     return redirect('/lists/%d/' % (list_.id,))
     
 def add_item(request, list_id):
     list_ = List.objects.get(id=list_id)
-    Item.objects.create(text=request.POST['item_text'], list=list_)
+    angkaRandom = random.randint(1,30)
+    angkaTebakan = int(request.POST['item_text'])    
+    
+    item=Item()
+    item.angka = angkaRandom
+    item.tebakan = angkaTebakan
+    item.status = lihatStatus(angkaRandom, angkaTebakan)
+    item.list = list_
+    item.save()
+
     return redirect('/lists/%d/' % (list_.id,))
+
+def lihatStatus(angka, tebakan):
+    if tebakan<angka+2 and tebakan>angka-2:
+    	return 'Kamu menang!!'
+    else:
+        return 'Kamu kalah...'
