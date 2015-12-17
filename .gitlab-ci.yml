@@ -1,0 +1,14 @@
+environment:
+ script:
+ - virtualenv --python=python3 ../virtualenv
+ - source ../virtualenv/bin/activate
+ - pip install -r requirements.txt
+ - mkdir ../database
+ - python3 manage.py migrate --noinput
+
+test:
+ script:
+ - source ../virtualenv/bin/activate
+ - python3 manage.py test
+ only:
+ - master
