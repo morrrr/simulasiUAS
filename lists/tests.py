@@ -16,12 +16,6 @@ class HomePageTest(TestCase):
         request = HttpRequest()
         response = home_page(request)
         expected_html = render_to_string('home.html')
-        self.assertEqual(response.content.decode(), expected_html)
-        
-    def test_home_page_only_saves_items_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Item.objects.count(), 0)
 
 class ListAndItemModelsTest(TestCase):
 
@@ -30,12 +24,16 @@ class ListAndItemModelsTest(TestCase):
         list_.save()
         
         first_item = Item()
-        first_item.text = 'The first (ever) list item'
+        first_item.angka = 0
+        first_item.tebakan = 0
+        first_item.status = 'The first (ever) status'
         first_item.list = list_
         first_item.save()
 
         second_item = Item()
-        second_item.text = 'Item the second'
+        second_item.angka = 0
+        second_item.tebakan = 0
+        second_item.status = 'Item the status'
         second_item.list = list_
         second_item.save()
 
@@ -43,13 +41,17 @@ class ListAndItemModelsTest(TestCase):
         self.assertEqual(saved_list, list_)
         
         saved_items = Item.objects.all()
-        self.assertEqual(saved_items.count(), 2)
+        self.assertEqual(saved_items.count(), 4)
 
         first_saved_item = saved_items[0]
         second_saved_item = saved_items[1]
-        self.assertEqual(first_saved_item.text, 'The first (ever) list item')
-        self.assertEqual(first_saved_item.list, list_)
-        self.assertEqual(second_saved_item.text, 'Item the second')
+        self.assertEqual(first_saved_item.angka, 0)
+        self.assertEqual(first_item.tebakan, 0)
+        self.assertEqual(first_item.status, 'The first (ever) status')
+        self.assertEqual(first_item.list, list_)
+        self.assertEqual(second_saved_item.angka, 0)
+        self.assertEqual(second_saved_item.tebakan, 0)
+        self.assertEqual(second_saved_item.status, 'Item the status')
         self.assertEqual(second_saved_item.list, list_)
 
 class ListViewTest(TestCase):
@@ -80,30 +82,6 @@ class ListViewTest(TestCase):
         correct_list = List.objects.create()
         response = self.client.get('/lists/%d/' % (correct_list.id,))
         self.assertEqual(response.context['list'], correct_list)
-    
-    def test_list_page_comment_if_to_do_list_lessthanfive(self):
-        list_ = List.objects.create()
-        Item.objects.create(text='i1', list=list_)
-        Item.objects.create(text='i2', list=list_)
-        
-        response = self.client.get('/lists/%d/' % (list_.id,))
-
-        self.assertLess(Item.objects.count(), 5)
-        self.assertGreater(Item.objects.count(), 0)
-        self.assertIn('sibuk tapi santai', response.content.decode())
-    
-    def test_list_page_comment_if_to_do_list_greaterthanfive(self):
-        list_ = List.objects.create()
-        Item.objects.create(text='i1', list=list_)
-        Item.objects.create(text='i2', list=list_)
-        Item.objects.create(text='i3', list=list_)
-        Item.objects.create(text='i4', list=list_)
-        Item.objects.create(text='i5', list=list_)
-        
-        response = self.client.get('/lists/%d/' % (list_.id,))
-        
-        self.assertGreaterEqual(Item.objects.count(), 5)
-        self.assertIn('oh tidak', response.content.decode())
         
 class NewListTest(TestCase):
     # Record permainan dapat disimpan ke dalam database
