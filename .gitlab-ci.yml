@@ -9,6 +9,6 @@ environment:
 test:
  script:
  - source ../virtualenv/bin/activate
- - python3 manage.py test
+ - python3 manage.py test lists/
  only:
  - master
