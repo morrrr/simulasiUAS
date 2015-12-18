@@ -58,3 +58,52 @@ class NewItemTest(TestCase):
         self.assertContains(response, 'Tebakan :17,')
         #self.fail(response)
 
+class ListAndItemModelTest(TestCase):
+    # test komentar tiap x kali menang
+    def test_comment_no_win(self):
+        list_nya = List.objects.create()
+        Item.objects.create(angka=15, tebakan=15, status='Kamu menang!!',list=list_nya)
+
+        response = self.client.get('/lists/%d/' % (list_nya.id))
+        self.assertNotContains(response, 'Ulala!!')
+        self.assertNotContains(response, 'Ulalala')
+        self.assertNotContains(response, 'Uulala')
+
+    def test_comment_three_win(self):
+        list_nya = List.objects.create()
+        Item.objects.create(angka=15, tebakan=15, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=14, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=16, status='Kamu menang!!',list=list_nya)
+        response = self.client.get('/lists/%d/' % (list_nya.id))
+        self.assertContains(response, 'Ulala!!')
+        self.assertNotContains(response, 'Ulalala')
+        self.assertNotContains(response, 'Uulala')
+
+    def test_comment_five_win(self):
+        list_nya = List.objects.create()
+        Item.objects.create(angka=15, tebakan=15, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=14, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=16, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=14, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=16, status='Kamu menang!!',list=list_nya)
+        response = self.client.get('/lists/%d/' % (list_nya.id))
+        self.assertNotContains(response, 'Ulala!!')
+        self.assertContains(response, 'Ulalala')
+        self.assertNotContains(response, 'Uulala')
+
+    def test_comment_five_win(self):
+        list_nya = List.objects.create()
+        Item.objects.create(angka=15, tebakan=15, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=14, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=16, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=14, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=16, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=15, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=14, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=16, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=14, status='Kamu menang!!',list=list_nya)
+        Item.objects.create(angka=15, tebakan=16, status='Kamu menang!!',list=list_nya)
+        response = self.client.get('/lists/%d/' % (list_nya.id))
+        self.assertNotContains(response, 'Ulala!!')
+        self.assertNotContains(response, 'Ulalala')
+        self.assertContains(response, 'Uulala')
