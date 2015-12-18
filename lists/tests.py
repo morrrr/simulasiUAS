@@ -91,7 +91,7 @@ class ListAndItemModelTest(TestCase):
         self.assertContains(response, 'Ulalala')
         self.assertNotContains(response, 'Uulala')
 
-    def test_comment_five_win(self):
+    def test_comment_ten_win(self):
         list_nya = List.objects.create()
         Item.objects.create(angka=15, tebakan=15, status='Kamu menang!!',list=list_nya)
         Item.objects.create(angka=15, tebakan=14, status='Kamu menang!!',list=list_nya)

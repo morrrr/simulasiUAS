@@ -4,7 +4,8 @@ import random
 
 def view_list(request, list_id):
     list_ = List.objects.get(id=list_id)
-    return render(request, 'list.html', {'list':list_})
+    comment = insert_comment(list_)
+    return render(request, 'list.html', {'list':list_, 'comment':comment})
 
 def home_page(request):
     return render(request, 'home.html')
@@ -43,3 +44,47 @@ def lihatStatus(angka, tebakan):
     	return 'Kamu menang!!'
     else:
         return 'Kamu kalah...'
+
+def insert_comment(list_periksa):
+    list_temp = Item.objects.filter(list=list_periksa).reverse()
+    counter = 0
+    comment = ''
+
+    if len(list_temp)<3:
+        return comment
+
+    for i in range(3):
+        item=list_temp[i]
+        if item.status == 'Kamu menang!!':
+            counter = counter+1
+
+    if counter == 3:
+        comment = 'Ulala!!'
+
+    if len(list_temp)<5:
+        return comment
+
+    counter = 0
+
+    for i in range(5):
+        item = list_temp[i]
+        if item.status == 'Kamu menang!!':
+            counter = counter+1
+
+    if counter == 5:
+        comment = 'Ulalala'
+
+    if len(list_temp)<10:
+        return comment
+
+    counter = 0
+
+    for i in range(10):
+        item = list_temp[i]
+        if item.status == 'Kamu menang!!':
+            counter = counter+1
+
+    if counter == 10:
+        comment = 'Uulala'
+
+    return comment
